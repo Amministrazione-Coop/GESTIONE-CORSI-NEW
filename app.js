@@ -14,9 +14,9 @@ function togglePartitaIva() {
     const partitaIvaGroup = document.getElementById('partitaIvaGroup');
     const partitaIvaInput = document.getElementById('partitaIva');
     
-    if (qualifica === 'oss' || qualifica === 'ausiliario' || qualifica === 'piva') {
+    if (qualifica === 'oss' || qualifica === 'ausiliario' || qualifica === 'pulizie' || qualifica === 'piva') {
         partitaIvaGroup.style.display = 'flex';
-        partitaIvaInput.required = true;
+        partitaIvaInput.required = false; // P.IVA non più obbligatoria
     } else {
         partitaIvaGroup.style.display = 'none';
         partitaIvaInput.required = false;
@@ -77,6 +77,7 @@ function handleFormSubmit(e) {
     const employeeData = {
         nome: formData.get('nome') || document.getElementById('nome').value,
         cognome: formData.get('cognome') || document.getElementById('cognome').value,
+        codiceFiscale: document.getElementById('codiceFiscale').value,
         dataAssunzione: formData.get('dataAssunzione') || document.getElementById('dataAssunzione').value,
         qualifica: document.getElementById('qualifica').value,
         partitaIva: document.getElementById('partitaIva').value,
@@ -90,8 +91,8 @@ function handleFormSubmit(e) {
     };
     
     // Validazione base
-    if (!employeeData.nome || !employeeData.cognome || !employeeData.dataAssunzione) {
-        alert('Inserisci almeno Nome, Cognome e Data Assunzione');
+    if (!employeeData.nome || !employeeData.cognome || !employeeData.codiceFiscale || !employeeData.dataAssunzione) {
+        alert('Inserisci almeno Nome, Cognome, Codice Fiscale e Data Assunzione');
         return;
     }
     
@@ -218,13 +219,8 @@ function getReadableText(field, value) {
         qualifica: {
             'oss': 'OSS',
             'ausiliario': 'Ausiliario',
+            'pulizie': 'Pulizie',
             'piva': 'P.IVA'
-        },
-        luogoLavoro: {
-            'oic-padova': 'OIC Padova',
-            'oic-thiene': 'OIC Thiene',
-            'oic-vedelago': 'OIC Vedelago',
-            'oic-dueville': 'OIC Dueville'
         }
     };
     
@@ -238,6 +234,7 @@ function editEmployee(index) {
     
     document.getElementById('nome').value = employee.nome || '';
     document.getElementById('cognome').value = employee.cognome || '';
+    document.getElementById('codiceFiscale').value = employee.codiceFiscale || '';
     document.getElementById('dataAssunzione').value = employee.dataAssunzione || '';
     
     document.getElementById('qualifica').value = employee.qualifica || '';
@@ -382,14 +379,15 @@ function displayEmployees() {
                 <div class="employee-header">
                     <div>
                         <div class="employee-name">${employee.nome} ${employee.cognome}</div>
+                        <div class="employee-date">CF: ${employee.codiceFiscale || 'Non inserito'}</div>
                         <div class="employee-date">Assunto il: ${new Date(employee.dataAssunzione).toLocaleDateString('it-IT')}</div>
                         <div class="employee-date">Qualifica: ${getReadableText('qualifica', employee.qualifica)}</div>
-                        <div class="employee-date">Luogo: ${getReadableText('luogoLavoro', employee.luogoLavoro)}</div>
+                        <div class="employee-date">Note: ${employee.luogoLavoro || 'Nessuna nota'}</div>
                         <div class="employee-date">Sezione: ${coopInfo}</div>
-                        ${(employee.qualifica === 'oss' || employee.qualifica === 'ausiliario' || employee.qualifica === 'piva') && employee.partitaIva ? 
+                        ${(employee.qualifica === 'oss' || employee.qualifica === 'ausiliario' || employee.qualifica === 'pulizie' || employee.qualifica === 'piva') && employee.partitaIva ? 
                             `<div class="employee-date">P.IVA: ${employee.partitaIva}</div>` : 
-                            (employee.qualifica === 'oss' || employee.qualifica === 'ausiliario' || employee.qualifica === 'piva') ? 
-                            `<div class="employee-date" style="color: #dc3545;">P.IVA: Non inserita</div>` : ''
+                            (employee.qualifica === 'oss' || employee.qualifica === 'ausiliario' || employee.qualifica === 'pulizie' || employee.qualifica === 'piva') ? 
+                            `<div class="employee-date" style="color: #999;">P.IVA: Non inserita</div>` : ''
                         }
                         <div class="employee-date">Ore totali: ${totalHours}h</div>
                     </div>
@@ -471,10 +469,11 @@ function preparePrintTable() {
         return `
             <tr>
                 <td>${employee.nome} ${employee.cognome}</td>
+                <td>${employee.codiceFiscale || '-'}</td>
                 <td>${new Date(employee.dataAssunzione).toLocaleDateString('it-IT')}</td>
                 <td>${getReadableText('qualifica', employee.qualifica)}</td>
                 <td>${employee.partitaIva || '-'}</td>
-                <td>${getReadableText('luogoLavoro', employee.luogoLavoro)}</td>
+                <td>${employee.luogoLavoro || '-'}</td>
                 <td>${coopInfo}</td>
                 <td>${sicurezza}</td>
                 <td>${haccp}</td>
