@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Gestione Corsi Dipendenti</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>🎓 Gestione Corsi</h1>
+                <p>Accesso Sistema Formazione Dipendenti</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required placeholder="Inserisci username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="Inserisci password">
+                </div>
+                
+                <button type="submit" class="btn-login">🔐 Accedi</button>
+                
+                <div id="error-message" class="error-message"></div>
+            </form>
+            
+            <div class="login-info">
+                <p><strong>Credenziali di default:</strong></p>
+                <p>Username: <code>admin</code></p>
+                <p>Password: <code>sicurezza2024</code></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>

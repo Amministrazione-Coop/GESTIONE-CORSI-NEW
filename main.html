@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Corsi Dipendenti</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="app-header">
+            <h1>🎓 Gestione Corsi Dipendenti</h1>
+            <div>
+                <span id="welcomeUser" style="margin-right: 15px; color: #666;"></span>
+                <button class="logout-btn" onclick="logout()">🚪 Esci</button>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('add')">Aggiungi Dipendente</button>
+            <button class="tab" onclick="showTab('list')">Lista Dipendenti</button>
+            <button class="tab" onclick="showTab('scadenze')">Scadenze Corsi</button>
+            <button class="tab" onclick="showTab('stats')">Statistiche</button>
+        </div>
+
+        <!-- Tab Aggiungi Dipendente -->
+        <div id="add" class="tab-content active">
+            <div class="form-section">
+                <h2>👤 Informazioni Dipendente</h2>
+                <form id="employeeForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nome">Nome *</label>
+                            <input type="text" id="nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cognome">Cognome *</label>
+                            <input type="text" id="cognome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dataAssunzione">Data Assunzione *</label>
+                            <input type="date" id="dataAssunzione" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="qualifica">Qualifica</label>
+                            <select id="qualifica" onchange="togglePartitaIva()">
+                                <option value="">Seleziona qualifica</option>
+                                <option value="oss">OSS</option>
+                                <option value="ausiliario">Ausiliario</option>
+                                <option value="piva">P.IVA</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="partitaIvaGroup" style="display: none;">
+                            <label for="partitaIva">P.IVA *</label>
+                            <input type="text" id="partitaIva" placeholder="Inserisci P.IVA">
+                        </div>
+                        <div class="form-group">
+                            <label for="luogoLavoro">Luogo di Lavoro</label>
+                            <select id="luogoLavoro">
+                                <option value="">Seleziona luogo</option>
+                                <option value="oic-padova">OIC Padova</option>
+                                <option value="oic-thiene">OIC Thiene</option>
+                                <option value="oic-vedelago">OIC Vedelago</option>
+                                <option value="oic-dueville">OIC Dueville</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-grid" style="grid-template-columns: 1fr 1fr; margin-top: 20px;">
+                        <div class="form-group">
+                            <label for="coopA">Sezione COOP A</label>
+                            <select id="coopA">
+                                <option value="">Non assegnato</option>
+                                <option value="si">Assegnato a COOP A</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="coopB">Sezione COOP B</label>
+                            <select id="coopB">
+                                <option value="">Non assegnato</option>
+                                <option value="si">Assegnato a COOP B</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h2>🛡️ Sicurezza Generale</h2>
+                <div class="form-grid" style="grid-template-columns: 1fr;">
+                    <div class="form-group">
+                        <label for="tipoSicurezza">Tipo di Rischio</label>
+                        <select id="tipoSicurezza">
+                            <option value="">Seleziona tipo</option>
+                            <option value="alto">Alto Rischio (16 ore)</option>
+                            <option value="basso">Basso Rischio (8 ore)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dataSicurezza">Data Corso Sicurezza</label>
+                        <input type="date" id="dataSicurezza">
+                    </div>
+                    <div class="form-group">
+                        <label for="attestatoSicurezza">Attestato Sicurezza</label>
+                        <input type="file" id="attestatoSicurezza" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>🍽️ Corso HACCP</h2>
+                <div class="form-grid" style="grid-template-columns: 1fr;">
+                    <div class="form-group">
+                        <label for="dataHACCP">Data Corso HACCP</label>
+                        <input type="date" id="dataHACCP">
+                    </div>
+                    <div class="form-group">
+                        <label for="attestatoHACCP">Attestato HACCP</label>
+                        <input type="file" id="attestatoHACCP" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>🔄 Aggiornamento Sicurezza</h2>
+                <div class="form-grid" style="grid-template-columns: 1fr;">
+                    <div class="form-group">
+                        <label for="dataAggiornamentoSicurezza">Data Aggiornamento Sicurezza</label>
+                        <input type="date" id="dataAggiornamentoSicurezza">
+                    </div>
+                    <div class="form-group">
+                        <label for="attestatoAggiornamento">Attestato Aggiornamento</label>
+                        <input type="file" id="attestatoAggiornamento" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" form="employeeForm">Aggiungi Dipendente</button>
+            
+            <!-- Messaggio di conferma -->
+            <div id="confirmMessage" class="confirm-message">
+                ✅ Dipendente salvato con successo!
+            </div>
+        </div>
+
+        <!-- Tab Lista Dipendenti -->
+        <div id="list" class="tab-content">
+            <div style="margin-bottom: 20px;">
+                <button class="btn-info" onclick="printTable()">🖨️ Stampa Tabella</button>
+            </div>
+            
+            <div id="employeeList" class="employee-list">
+                <div class="empty-state">
+                    Nessun dipendente inserito ancora. Utilizza il tab "Aggiungi Dipendente" per iniziare.
+                </div>
+            </div>
+            
+            <!-- Tabella per la stampa -->
+            <div id="printableTable" class="print-table">
+                <div class="print-header">
+                    <h1>REGISTRO FORMAZIONE DIPENDENTI</h1>
+                    <p>Data stampa: <span id="printDate"></span></p>
+                </div>
+                <table class="print-table">
+                    <thead>
+                        <tr>
+                            <th>Nome Cognome</th>
+                            <th>Data Assunzione</th>
+                            <th>Qualifica</th>
+                            <th>P.IVA</th>
+                            <th>Luogo Lavoro</th>
+                            <th>COOP</th>
+                            <th>Sicurezza</th>
+                            <th>HACCP</th>
+                            <th>Aggiornamento</th>
+                            <th>Ore Totali</th>
+                        </tr>
+                    </thead>
+                    <tbody id="printTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab Scadenze Corsi -->
+        <div id="scadenze" class="tab-content">
+            <div style="margin-bottom: 20px;">
+                <button class="btn-warning" onclick="printScadenze()">🖨️ Stampa Scadenze</button>
+                <button class="btn-info" onclick="refreshScadenze()">🔄 Aggiorna Scadenze</button>
+            </div>
+            
+            <div class="stats-grid" style="margin-bottom: 30px;">
+                <div class="stat-card" style="background: linear-gradient(135deg, #dc3545, #fd7e14); color: white;">
+                    <div class="stat-number" id="corsiBScaduti" style="color: white;">0</div>
+                    <div class="stat-label" style="color: white;">Corsi Scaduti</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #ffc107, #fd7e14); color: white;">
+                    <div class="stat-number" id="corsiInScadenza" style="color: white;">0</div>
+                    <div class="stat-label" style="color: white;">In Scadenza (30gg)</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #28a745, #20c997); color: white;">
+                    <div class="stat-number" id="corsiOk" style="color: white;">0</div>
+                    <div class="stat-label" style="color: white;">Corsi Validi</div>
+                </div>
+            </div>
+            
+            <div id="scadenzeList" class="employee-list">
+                <div class="empty-state">
+                    Nessun dipendente inserito ancora.
+                </div>
+            </div>
+            
+            <!-- Tabella scadenze per la stampa -->
+            <div id="printableScadenze" class="print-table">
+                <div class="print-header">
+                    <h1>SCADENZE CORSI FORMAZIONE</h1>
+                    <p>Data stampa: <span id="printScadenzeDate"></span></p>
+                </div>
+                <table class="print-table">
+                    <thead>
+                        <tr>
+                            <th>Nome Cognome</th>
+                            <th>Corso</th>
+                            <th>Data Corso</th>
+                            <th>Data Scadenza</th>
+                            <th>Giorni Rimasti</th>
+                            <th>Stato</th>
+                        </tr>
+                    </thead>
+                    <tbody id="printScadenzeBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab Statistiche -->
+        <div id="stats" class="tab-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalEmployees">0</div>
+                    <div class="stat-label">Dipendenti Totali</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedSafety">0</div>
+                    <div class="stat-label">Sicurezza Completata</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedHACCP">0</div>
+                    <div class="stat-label">HACCP Completato</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalHours">0</div>
+                    <div class="stat-label">Ore Totali Formazione</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
