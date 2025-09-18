@@ -38,6 +38,10 @@
                             <input type="text" id="cognome" required>
                         </div>
                         <div class="form-group">
+                            <label for="codiceFiscale">Codice Fiscale *</label>
+                            <input type="text" id="codiceFiscale" required placeholder="Inserisci Codice Fiscale">
+                        </div>
+                        <div class="form-group">
                             <label for="dataAssunzione">Data Assunzione *</label>
                             <input type="date" id="dataAssunzione" required>
                         </div>
@@ -47,22 +51,17 @@
                                 <option value="">Seleziona qualifica</option>
                                 <option value="oss">OSS</option>
                                 <option value="ausiliario">Ausiliario</option>
+                                <option value="pulizie">Pulizie</option>
                                 <option value="piva">P.IVA</option>
                             </select>
                         </div>
                         <div class="form-group" id="partitaIvaGroup" style="display: none;">
-                            <label for="partitaIva">P.IVA *</label>
-                            <input type="text" id="partitaIva" placeholder="Inserisci P.IVA">
+                            <label for="partitaIva">P.IVA</label>
+                            <input type="text" id="partitaIva" placeholder="Inserisci P.IVA (opzionale)">
                         </div>
                         <div class="form-group">
-                            <label for="luogoLavoro">Luogo di Lavoro</label>
-                            <select id="luogoLavoro">
-                                <option value="">Seleziona luogo</option>
-                                <option value="oic-padova">OIC Padova</option>
-                                <option value="oic-thiene">OIC Thiene</option>
-                                <option value="oic-vedelago">OIC Vedelago</option>
-                                <option value="oic-dueville">OIC Dueville</option>
-                            </select>
+                            <label for="luogoLavoro">Note/Luogo di Lavoro</label>
+                            <textarea id="luogoLavoro" placeholder="Inserisci note o luogo di lavoro" rows="3"></textarea>
                         </div>
                     </div>
                     
@@ -165,10 +164,11 @@
                     <thead>
                         <tr>
                             <th>Nome Cognome</th>
+                            <th>Codice Fiscale</th>
                             <th>Data Assunzione</th>
                             <th>Qualifica</th>
                             <th>P.IVA</th>
-                            <th>Luogo Lavoro</th>
+                            <th>Note/Luogo</th>
                             <th>COOP</th>
                             <th>Sicurezza</th>
                             <th>HACCP</th>
