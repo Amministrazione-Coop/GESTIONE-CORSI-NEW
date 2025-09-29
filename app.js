@@ -687,6 +687,88 @@ function refreshScadenze() {
 }
 
 function printScadenze() {
-    // Implementazione stampa scadenze
-    console.log('Stampa scadenze non ancora implementata');
+    const printScadenzeBody = document.getElementById('printScadenzeBody');
+    const printScadenzeDate = document.getElementById('printScadenzeDate');
+    
+    if (!printScadenzeBody || !printScadenzeDate) {
+        console.error('Elementi per la stampa scadenze non trovati');
+        return;
+    }
+    
+    printScadenzeDate.textContent = new Date().toLocaleDateString('it-IT');
+    
+    const scadenzeData = [];
+    
+    employees.forEach(employee => {
+        // Sicurezza
+        if (employee.dataSicurezza) {
+            const expiry = calculateExpiryDate(employee.dataSicurezza, 'sicurezza');
+            const days = getDaysUntilExpiry(expiry);
+            scadenzeData.push({
+                nomeCompleto: `${employee.nome} ${employee.cognome}`,
+                corso: 'Sicurezza',
+                dataCorso: new Date(employee.dataSicurezza).toLocaleDateString('it-IT'),
+                dataScadenza: expiry ? expiry.toLocaleDateString('it-IT') : '-',
+                giorniRimasti: days,
+                stato: days < 0 ? 'SCADUTO' : days <= 30 ? 'IN SCADENZA' : 'VALIDO',
+                statusClass: days < 0 ? 'scaduto' : days <= 30 ? 'warning' : 'ok'
+            });
+        }
+        
+        // HACCP
+        if (employee.dataHACCP) {
+            const expiry = calculateExpiryDate(employee.dataHACCP, 'haccp');
+            const days = getDaysUntilExpiry(expiry);
+            scadenzeData.push({
+                nomeCompleto: `${employee.nome} ${employee.cognome}`,
+                corso: 'HACCP',
+                dataCorso: new Date(employee.dataHACCP).toLocaleDateString('it-IT'),
+                dataScadenza: expiry ? expiry.toLocaleDateString('it-IT') : '-',
+                giorniRimasti: days,
+                stato: days < 0 ? 'SCADUTO' : days <= 30 ? 'IN SCADENZA' : 'VALIDO',
+                statusClass: days < 0 ? 'scaduto' : days <= 30 ? 'warning' : 'ok'
+            });
+        }
+        
+        // Aggiornamento
+        if (employee.dataAggiornamentoSicurezza) {
+            const expiry = calculateExpiryDate(employee.dataAggiornamentoSicurezza, 'aggiornamento');
+            const days = getDaysUntilExpiry(expiry);
+            scadenzeData.push({
+                nomeCompleto: `${employee.nome} ${employee.cognome}`,
+                corso: 'Aggiornamento Sicurezza',
+                dataCorso: new Date(employee.dataAggiornamentoSicurezza).toLocaleDateString('it-IT'),
+                dataScadenza: expiry ? expiry.toLocaleDateString('it-IT') : '-',
+                giorniRimasti: days,
+                stato: days < 0 ? 'SCADUTO' : days <= 30 ? 'IN SCADENZA' : 'VALIDO',
+                statusClass: days < 0 ? 'scaduto' : days <= 30 ? 'warning' : 'ok'
+            });
+        }
+    });
+    
+    // Ordina per scadenza
+    scadenzeData.sort((a, b) => a.giorniRimasti - b.giorniRimasti);
+    
+    // Genera righe tabella
+    printScadenzeBody.innerHTML = scadenzeData.map(item => `
+        <tr class="print-row-${item.statusClass}">
+            <td>${item.nomeCompleto}</td>
+            <td>${item.corso}</td>
+            <td>${item.dataCorso}</td>
+            <td>${item.dataScadenza}</td>
+            <td>${item.giorniRimasti}</td>
+            <td>${item.stato}</td>
+        </tr>
+    `).join('');
+    
+    // Stampa
+    const printContent = document.getElementById('printableScadenze').innerHTML;
+    const originalContent = document.body.innerHTML;
+    
+    document.body.innerHTML = printContent;
+    window.print();
+    document.body.innerHTML = originalContent;
+    
+    // Reinizializza dopo la stampa
+    initializeApp();
 }
