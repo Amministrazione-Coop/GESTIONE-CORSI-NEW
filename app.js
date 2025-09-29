@@ -433,25 +433,40 @@ function preparePrintTable() {
     tableBody.innerHTML = employees.map(employee => {
         let totalHours = 0;
         let sicurezza = '-';
+        let dataSicurezza = '-';
+        let scadenzaSicurezza = '-';
         let haccp = '-';
+        let dataHACCP = '-';
+        let scadenzaHACCP = '-';
         let aggiornamento = '-';
+        let dataAggiornamento = '-';
+        let scadenzaAggiornamento = '-';
         
         // Calcola informazioni sicurezza
         if (employee.tipoSicurezza && employee.dataSicurezza) {
             const hours = employee.tipoSicurezza === 'alto' ? 16 : 8;
             sicurezza = `${employee.tipoSicurezza === 'alto' ? 'Alto' : 'Basso'} (${hours}h)`;
+            dataSicurezza = new Date(employee.dataSicurezza).toLocaleDateString('it-IT');
+            const expiryDate = calculateExpiryDate(employee.dataSicurezza, 'sicurezza');
+            scadenzaSicurezza = expiryDate ? expiryDate.toLocaleDateString('it-IT') : '-';
             totalHours += hours;
         }
         
         // Calcola HACCP
         if (employee.dataHACCP) {
             haccp = 'Completato (4h)';
+            dataHACCP = new Date(employee.dataHACCP).toLocaleDateString('it-IT');
+            const expiryDate = calculateExpiryDate(employee.dataHACCP, 'haccp');
+            scadenzaHACCP = expiryDate ? expiryDate.toLocaleDateString('it-IT') : '-';
             totalHours += 4;
         }
         
         // Calcola aggiornamento
         if (employee.dataAggiornamentoSicurezza) {
             aggiornamento = 'Completato (6h)';
+            dataAggiornamento = new Date(employee.dataAggiornamentoSicurezza).toLocaleDateString('it-IT');
+            const expiryDate = calculateExpiryDate(employee.dataAggiornamentoSicurezza, 'aggiornamento');
+            scadenzaAggiornamento = expiryDate ? expiryDate.toLocaleDateString('it-IT') : '-';
             totalHours += 6;
         }
         
@@ -476,8 +491,14 @@ function preparePrintTable() {
                 <td>${employee.luogoLavoro || '-'}</td>
                 <td>${coopInfo}</td>
                 <td>${sicurezza}</td>
+                <td>${dataSicurezza}</td>
+                <td>${scadenzaSicurezza}</td>
                 <td>${haccp}</td>
+                <td>${dataHACCP}</td>
+                <td>${scadenzaHACCP}</td>
                 <td>${aggiornamento}</td>
+                <td>${dataAggiornamento}</td>
+                <td>${scadenzaAggiornamento}</td>
                 <td>${totalHours}h</td>
             </tr>
         `;
@@ -533,7 +554,7 @@ function calculateExpiryDate(courseDate, courseType) {
     const date = new Date(courseDate);
     const expiryMonths = {
         'sicurezza': 60,     // 5 anni (corso iniziale)
-        'haccp': 24,         // 2 anni (più comune per HACCP)
+        'haccp': 24,         // 2 anni
         'aggiornamento': 60  // 5 anni (aggiornamento sicurezza)
     };
     
