@@ -217,13 +217,15 @@ label {
     color: #333;
 }
 
-input, select {
+input, select, textarea {
     padding: 12px 15px;
     border: 2px solid #e9ecef;
     border-radius: 10px;
     font-size: 14px;
     transition: all 0.3s ease;
     background: white;
+	font-family: inherit;
+    resize: vertical;
 }
 
 input[type="file"] {
